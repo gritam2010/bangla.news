@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>বাংলা নিউজ</title>
+
+<style>
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #f1f1f1;
+}
+
+header {
+  background: green;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.news {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.news img {
+  width: 100%;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>📰 বাংলা নিউজ</h1>
+</header>
+
+<div class="container">লোড হচ্ছে...</div>
+
+<script>
+const apiKey = "Y7HkQiR0D6KgJVTYFCZz7dZibtgqbtrq_qaGQTUdPbxJIEer";
+
+fetch(`https://api.currentsapi.services/v1/latest-news?apiKey=${apiKey}`)
+.then(res => res.json())
+.then(data => {
+  let container = document.querySelector(".container");
+  container.innerHTML = "";
+
+  if (!data.news || data.news.length === 0) {
+    container.innerHTML = "❌ সংবাদ পাওয়া যায়নি";
+    return;
+  }
+
+  data.news.forEach(article => {
+    let div = document.createElement("div");
+    div.className = "news";
+
+    div.innerHTML = `
+      <img src="${article.image || ''}" alt="">
+      <h2>${article.title}</h2>
+      <p>${article.description || "বিস্তারিত নেই"}</p>
+      <a href="${article.url}" target="_blank">👉 বিস্তারিত পড়ুন</a>
+    `;
+
+    container.appendChild(div);
+  });
+})
+.catch(err => {
+  document.querySelector(".container").innerHTML =
+    "❌ Error: " + err.message;
+});
+</script>
+
+</body>
+</html>
